@@ -58,6 +58,20 @@ void calcpos(particle2 *p){
 
 }
 
+// Semi-Explicit Euler method
+void euler_step(particle2 *p){
+	calcforce(p);
+	calcacc(p);
+
+    // 1. Update velocity first
+	p->vel.x += p->acc.x * p->elp_time;
+	p->vel.y += p->acc.y * p->elp_time;
+
+    // 2. Update position using the brand new velocity
+	p->pos.x += p->vel.x * p->elp_time;
+	p->pos.y += p->vel.y * p->elp_time;
+}
+
 void stats(particle2 *p, bool header){
 	if(header == 1)
 		printf("Pos\t\tVel\t\tAcc\t\tForce\t\tMass\t\tTime\n");

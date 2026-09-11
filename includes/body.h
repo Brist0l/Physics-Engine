@@ -2,6 +2,7 @@
 #define BODY_H
 
 #include "../includes/vec2.h"
+#include<stdbool.h>
 
 typedef struct{
     float mass;
@@ -20,6 +21,7 @@ void calcacc(particle2 *p);
 void calcpos(particle2 *p);
 void calcvel(particle2 *p);
 void stats(particle2 *p, bool header);
+void euler_step(particle2 *p);
 
 
 #endif

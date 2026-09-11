@@ -4,6 +4,7 @@
 
 #include "includes/vec2.h"
 #include "includes/body.h"
+#include "includes/args.h"
 
 #define MAX_BODIES 100
 #define g -9.8
@@ -59,27 +60,39 @@ void world_destroy(struct w* world){
 	world->capacity = 1;
 }
 
-void world_simulate(struct w* world){
+void world_simulate(struct w* world,bool by_e){
 	for(int i = 0;i < world->num_of_bodies;i++){
 		particle2 *p = &world->bodies[i];
 
-		calcforce(p);
-		calcacc(p);
-		calcvel(p);
-		calcpos(p);
+
+		if(by_e == true)
+			euler_step(p);
+		else{
+			calcforce(p);
+			calcacc(p);
+			calcvel(p);
+			calcpos(p);
+		}
 
 		p->elp_time += world->fixed_dt;
 	}
 }
 
 
-int main(){
+int main(int argc,char* argv[]){
 	// world definations
 	struct w *world = (struct w*) malloc(sizeof(struct w));
 	particle2 *p1 = (particle2*) malloc(sizeof(particle2));
+	particle2 *p2 = (particle2*) malloc(sizeof(particle2));
+
+	struct t_thing args = sendargs(argc,argv);
+	bool by_euler = pyboolconverter(args.sliced_args[0]);
+
+	if(by_euler == true)
+		printf("Simulating using euler\n");
 
 	float ti = 0;
-	float tf = 1;
+	float tf = 0.5;
 
 	bool h = true;
 
@@ -90,18 +103,42 @@ int main(){
 	p1->pos.y = 100;
 	p1->elp_time = ti;
 
+	p2->mass = 200;
+	p2->acc.x = 0;
+	p2->acc.y = g;
+	p2->pos.x = 0;
+	p2->pos.y = 100;
+	p2->elp_time = ti;
+
 	world_init(world);
+
 	p1 = world_create_body(world,p1);
+	p2 = world_create_body(world,p2);
 
 	while(ti <= tf){
-		world_simulate(world);
-
-		stats(p1,h);
+		world_simulate(world,by_euler);
 
 		ti += world->fixed_dt;
+
+
+        	// P1 uses Linear/Explicit Kinematics
+
+        	printf("P1 -> ");
+		stats(p1, h);
 
 		if(h == true)
 			h = false;
 
+
+       	 	// P2 uses Semi-Explicit Euler
+
+
+        	printf("P2 -> ");
+		stats(p2, h);
+
+		printf("\n");
+
+		p1->mass -= 1;
+		p2->mass -= 1;
 	}
 }
