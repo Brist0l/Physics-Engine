@@ -1,7 +1,41 @@
 #include<stdbool.h>
 #include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
 
-#include "defs.h"
+#include "../includes/vec2.h"
+#include "../includes/body.h"
+
+vector2 *vec2_add(vector2 *a,vector2 *b){
+	vector2 *temp = (vector2 *) malloc(sizeof(vector2));
+	temp->x = a->x + b->x;
+	temp->y = a->y + b->y;
+
+	return temp;
+}
+
+vector2 *vec2_sub(vector2 *a,vector2 *b){
+	vector2 *temp = (vector2 *) malloc(sizeof(vector2));
+	temp->x = a->x - b->x;
+	temp->y = a->y - b->y;
+
+	return temp;
+}
+
+void vec2_scale(vector2 *a,const int r){
+	a->x *= r;
+	a->y *= r;
+}
+
+float vec2_dot(vector2 *a,vector2 *b){
+	return (a->x * b->x) + (a->y * b->y);
+}
+
+float vec2_lenght(vector2 *a){
+	// sqrt(x^2 + y^2)
+	return sqrt(pow(a->x,2) + pow(a->y,2));
+
+}
 
 void calcforce(particle2 *p){
 	p->force.x = p->mass * p->acc.x;
