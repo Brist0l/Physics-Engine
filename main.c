@@ -105,6 +105,18 @@ int main(int argc, char *argv[])
     p3->force.y = 0.0f;
     p3->elp_time = 0.0f;
 
+    particle2 *p4 = world_create_body(&world);
+    p4->mass = 200.0f;
+    p4->pos.x = 20.0f;
+    p4->pos.y = 200.0f;
+    p4->vel.x = -20.0f; // Given initial velocity to animate
+    p4->vel.y = 15.0f;
+    p4->acc.x = 0.0f;
+    p4->acc.y = 2.0f;
+    p4->force.x = 0.0f;
+    p4->force.y = 0.0f;
+    p4->elp_time = 0.0f;
+
     bool running = true;
     SDL_Event event;
     Uint32 frame_start;
